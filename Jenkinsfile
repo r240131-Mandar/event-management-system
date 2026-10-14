@@ -1,8 +1,7 @@
 pipeline {
     agent any
-    environment {
-        IMAGE = 'event-management-system'
-        CONTAINER = 'ems-app'
+        environment {
+        PATH = "C:\\Users\\mandar\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin;${env.PATH}"
     }
     stages {
         stage('Checkout') {
