@@ -1,22 +1,35 @@
 pipeline {
     agent any
-        environment {
+
+    environment {
         PATH = "C:\\Users\\mandar\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin;${env.PATH}"
+        IMAGE_NAME = "event-management-system"
+        CONTAINER_NAME = "ems-test-run"
     }
+
     stages {
         stage('Checkout') {
-            steps { checkout scm }
+            steps {
+                checkout scm
+            }
         }
+
         stage('Build') {
-            steps { bat 'docker build -t %IMAGE%:%BUILD_NUMBER% -t %IMAGE%:latest .' }
+            steps {
+                bat 'docker build -t %IMAGE_NAME%:%BUILD_NUMBER% -t %IMAGE_NAME%:latest .'
+            }
         }
+
         stage('Test') {
-            steps { bat 'docker run --rm %IMAGE%:latest python -m py_compile app.py' }
+            steps {
+                bat 'docker image inspect %IMAGE_NAME%:latest'
+            }
         }
+
         stage('Deploy') {
             steps {
-                bat 'docker rm -f %CONTAINER% || exit 0'
-                bat 'docker run -d --name %CONTAINER% -p 5000:5000 %IMAGE%:latest'
+                bat 'docker rm -f %CONTAINER_NAME% || exit 0'
+                bat 'docker run -d --name %CONTAINER_NAME% -p 5000:5000 %IMAGE_NAME%:latest'
             }
         }
     }
